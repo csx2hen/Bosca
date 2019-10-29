@@ -7,6 +7,7 @@ import com.bosca.user.shared.UserDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +19,19 @@ import javax.validation.Valid;
 public class UserController {
 
     private UserService userService;
+    private Environment environment;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, Environment environment) {
         this.userService = userService;
+        this.environment = environment;
     }
 
 
     // just for test
     @GetMapping
     public String getUsers() {
-        return "Working";
+        return environment.getProperty("token.secret");
     }
 
 
