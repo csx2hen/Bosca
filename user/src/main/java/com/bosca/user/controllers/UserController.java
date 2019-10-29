@@ -25,6 +25,13 @@ public class UserController {
     }
 
 
+    // just for test
+    @GetMapping
+    public String getUsers() {
+        return "Working";
+    }
+
+
     @PostMapping
     public ResponseEntity<CreateUserResponseModel> createUser(@Valid @RequestBody CreateUserRequestModel userDetails) {
 
