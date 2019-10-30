@@ -2,6 +2,7 @@ package com.bosca.user.controllers;
 
 import com.bosca.user.models.CreateUserRequestModel;
 import com.bosca.user.models.CreateUserResponseModel;
+import com.bosca.user.models.UserResponseModel;
 import com.bosca.user.services.UserService;
 import com.bosca.user.shared.UserDto;
 import org.modelmapper.ModelMapper;
@@ -47,5 +48,15 @@ public class UserController {
         CreateUserResponseModel returnValue = modelMapper.map(createdUser, CreateUserResponseModel.class);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
+    }
+
+
+    @GetMapping(value="/{userId}")
+    public ResponseEntity<UserResponseModel> getUser(@PathVariable("userId") String userId) {
+
+        UserDto userDto = userService.getUserDetailsByUserId(userId);
+        UserResponseModel returnValue = new ModelMapper().map(userDto, UserResponseModel.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(returnValue);
     }
 }
