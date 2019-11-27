@@ -1,0 +1,11 @@
+upload:
+request:filepath
+response:fileID
+
+download:
+request:fileID,downloadPath--/Users/xuyueting/Documents/test.docx
+response: status code
+
+delete:
+request:fileID
+response: status code
