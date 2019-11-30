@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.bosca</groupId>
-    <artifactId>user</artifactId>
+    <artifactId>user-ws</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>user</name>
+    <name>user-ws</name>
     <description>User microservice</description>
 
     <properties>
