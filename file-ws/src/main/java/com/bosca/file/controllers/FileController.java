@@ -49,8 +49,8 @@ public class FileController {
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileId, HttpServletRequest request) {
         Resource resource = new InputStreamResource(fileService.downloadFile(fileId));
 
-        String fileName = "test.png";
-        String contentType = request.getServletContext().getMimeType(fileName);
+        String filename = "test.png";
+        String contentType = request.getServletContext().getMimeType(filename);
 
         if(contentType == null) {
             contentType = "application/octet-stream";
@@ -58,7 +58,7 @@ public class FileController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .body(resource);
     }
 

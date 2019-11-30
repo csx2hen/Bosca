@@ -40,18 +40,18 @@ public class FileServiceS3Impl implements FileService {
     }
 
     @Override
-    public void uploadFile(String fileName, InputStream fileInputStream) {
-        PutObjectResult result = s3client.putObject(bucketName, fileName, fileInputStream, null);
+    public void uploadFile(String filename, InputStream fileInputStream) {
+        PutObjectResult result = s3client.putObject(bucketName, filename, fileInputStream, null);
     }
 
     @Override
-    public InputStream downloadFile(String fileName) {
-        S3Object s3Object = s3client.getObject(bucketName, fileName);
+    public InputStream downloadFile(String filename) {
+        S3Object s3Object = s3client.getObject(bucketName, filename);
         return s3Object.getObjectContent();
     }
 
     @Override
-    public void removeFile(String fileName) {
-        s3client.deleteObject(bucketName, fileName);
+    public void removeFile(String filename) {
+        s3client.deleteObject(bucketName, filename);
     }
 }
