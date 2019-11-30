@@ -61,7 +61,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             return null;
         }
 
-        Log.debug("userId: " + userId);
+//        System.out.println("userId: " + userId);
 
         return new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
     }
