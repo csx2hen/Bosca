@@ -1,12 +1,8 @@
 package com.bosca.file.models;
 
-public class UploadResponseModel {
+public class CreateFileInfoResponse {
 
     private String fileId;
-
-    public UploadResponseModel(String fileId) {
-        this.fileId = fileId;
-    }
 
     public String getFileId() {
         return fileId;

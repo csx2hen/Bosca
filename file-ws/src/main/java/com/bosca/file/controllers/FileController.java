@@ -1,6 +1,10 @@
 package com.bosca.file.controllers;
 
-import com.bosca.file.models.UploadResponseModel;
+import com.bosca.file.data.MetadataService;
+import com.bosca.file.models.CreateFileInfoRequest;
+import com.bosca.file.models.CreateFileInfoResponse;
+import com.bosca.file.models.GetFileInfoResponse;
+import com.bosca.file.models.UploadResponse;
 import com.bosca.file.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -23,39 +27,39 @@ public class FileController {
 
     private Environment environment;
     private FileService fileService;
+    private MetadataService metadataService;
 
     @Autowired
-    public FileController(FileService fileService, Environment environment) {
+    public FileController(MetadataService metadataService, FileService fileService, Environment environment) {
+        this.metadataService = metadataService;
         this.fileService = fileService;
         this.environment = environment;
     }
 
     @PostMapping
-    public ResponseEntity<UploadResponseModel> uploadFile(@RequestParam("file") MultipartFile file,
-                                                          @RequestParam("userId") String userId) {
-
-        UUID fileId = UUID.randomUUID();
+    public ResponseEntity<UploadResponse> uploadFile(@RequestParam("file") MultipartFile file,
+                                                     @RequestParam("userId") String userId) {
+        CreateFileInfoResponse response =
+                metadataService.createFileInfo(new CreateFileInfoRequest(file.getOriginalFilename(), userId));
+        String fileId = response.getFileId();
         try {
-            fileService.uploadFile(fileId.toString(), file.getInputStream());
+            fileService.uploadFile(fileId, file.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        UploadResponseModel returnValue = new UploadResponseModel(fileId.toString());
-
+        UploadResponse returnValue = new UploadResponse(fileId);
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
     }
 
     @GetMapping("{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileId, HttpServletRequest request) {
+        GetFileInfoResponse response = metadataService.getFileInfo(fileId);
+        String filename = response.getFilename();
         Resource resource = new InputStreamResource(fileService.downloadFile(fileId));
-
-        String filename = "test.png";
         String contentType = request.getServletContext().getMimeType(filename);
-
         if(contentType == null) {
             contentType = "application/octet-stream";
         }
-
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
@@ -64,6 +68,7 @@ public class FileController {
 
     @DeleteMapping("{fileId}")
     public ResponseEntity removeFile(@PathVariable String fileId) {
+        metadataService.removeFileInfo(fileId);
         fileService.removeFile(fileId);
         return ResponseEntity.noContent().build();
     }
