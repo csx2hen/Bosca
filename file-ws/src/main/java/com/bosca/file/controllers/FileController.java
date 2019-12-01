@@ -1,11 +1,11 @@
 package com.bosca.file.controllers;
 
 import com.bosca.file.data.MetadataService;
-import com.bosca.file.models.CreateFileInfoRequest;
-import com.bosca.file.models.CreateFileInfoResponse;
-import com.bosca.file.models.GetFileInfoResponse;
-import com.bosca.file.models.UploadResponse;
+import com.bosca.file.models.*;
 import com.bosca.file.services.FileService;
+import com.bosca.file.shared.MetadataDto;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.InputStreamResource;
@@ -28,6 +28,12 @@ public class FileController {
     private Environment environment;
     private FileService fileService;
     private MetadataService metadataService;
+    private ModelMapper modelMapper;
+
+    {
+        modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+    }
 
     @Autowired
     public FileController(MetadataService metadataService, FileService fileService, Environment environment) {
@@ -42,11 +48,14 @@ public class FileController {
         CreateFileInfoResponse response =
                 metadataService.createFileInfo(new CreateFileInfoRequest(file.getOriginalFilename(), userId));
         String fileId = response.getFileId();
+        MetadataDto metadata = null;
         try {
-            fileService.uploadFile(fileId, file.getInputStream());
+            metadata = fileService.uploadFile(fileId, file.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
+        assert metadata != null;
+        metadataService.updateFileInfo(fileId, modelMapper.map(metadata, UpdateFileInfoRequest.class));
         UploadResponse returnValue = new UploadResponse(fileId);
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
     }

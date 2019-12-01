@@ -7,5 +7,6 @@ public interface FileInfoService {
     FileInfoDto createFileInfo(FileInfoDto fileInfo);
     FileInfoDto getFileInfo(String fileId);
     void removeFileInfo(String fileId);
+    void updateFileInfo(String fileId, FileInfoDto fileInfo);
 
 }
