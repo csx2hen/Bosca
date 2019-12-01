@@ -8,7 +8,6 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 
@@ -47,5 +46,23 @@ public class FileInfoServiceImpl implements FileInfoService {
     public void removeFileInfo(String fileId) {
         FileInfoEntity fileInfoEntity = fileInfoRepository.findByFileId(fileId);
         fileInfoRepository.delete(fileInfoEntity);
+    }
+
+    @Override
+    public void updateFileInfo(String fileId, FileInfoDto fileInfo) {
+        FileInfoEntity fileInfoEntity = fileInfoRepository.findByFileId(fileId);
+        updateFileInfoHelper(fileInfoEntity, fileInfo);
+        fileInfoRepository.save(fileInfoEntity);
+    }
+
+    private void updateFileInfoHelper(FileInfoEntity fileInfoEntity, FileInfoDto fileInfo) {
+        if (fileInfo.getFilename() != null)
+            fileInfoEntity.setFilename(fileInfo.getFilename());
+        if (fileInfo.getSize() != 0)
+            fileInfoEntity.setSize(fileInfo.getSize());
+        if (fileInfo.getCreatedTime() != null)
+            fileInfoEntity.setCreatedTime(fileInfo.getCreatedTime());
+        if (fileInfo.getLastModifiedTime() != null)
+            fileInfoEntity.setLastModifiedTime(fileInfo.getLastModifiedTime());
     }
 }

@@ -1,26 +1,13 @@
-package com.bosca.metadata.shared;
+package com.bosca.metadata.models;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class FileInfoDto implements Serializable {
-    private static final long serialVersionUID = -3823898974277328936L;
+public class UpdateFileInfoRequest {
 
-    private String fileId;
     private String filename;
-    private String owner;
     private long size;
     private Date createdTime;
     private Date lastModifiedTime;
-
-
-    public String getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
-    }
 
     public String getFilename() {
         return filename;
@@ -28,14 +15,6 @@ public class FileInfoDto implements Serializable {
 
     public void setFilename(String filename) {
         this.filename = filename;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public long getSize() {

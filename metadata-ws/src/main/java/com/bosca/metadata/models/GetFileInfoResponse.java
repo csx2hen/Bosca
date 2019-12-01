@@ -1,47 +1,16 @@
-package com.bosca.metadata.data;
+package com.bosca.metadata.models;
 
-
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
-@Entity
-@Table(name = "files")
-public class FileInfoEntity implements Serializable {
-    private static final long serialVersionUID = 9101571567826004558L;
+public class GetFileInfoResponse {
 
-    @Id
-    @GeneratedValue
-    private long id;
-
-    @Column(nullable = false, unique = true)
     private String fileId;
-
-    @Column(nullable = false, length = 120)
     private String filename;
-
-    @Column(nullable = false)
     private String owner;
-
-    @Column(nullable = true)
     private long size;
-
-    @Column(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
-
-    @Column(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedTime;
 
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getFileId() {
         return fileId;

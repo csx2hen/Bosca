@@ -11,13 +11,18 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.util.IOUtils;
+import com.bosca.file.shared.MetadataDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 @Service
@@ -40,8 +45,21 @@ public class FileServiceS3Impl implements FileService {
     }
 
     @Override
-    public void uploadFile(String filename, InputStream fileInputStream) {
-        PutObjectResult result = s3client.putObject(bucketName, filename, fileInputStream, null);
+    public MetadataDto uploadFile(String filename, InputStream fileInputStream) {
+        byte[] bytes = new byte[]{};
+        try {
+            bytes = IOUtils.toByteArray(fileInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(bytes.length);
+        s3client.putObject(bucketName, filename, new ByteArrayInputStream(bytes), metadata);
+        metadata = s3client.getObjectMetadata(bucketName, filename);
+        return new MetadataDto(metadata.getContentLength(),
+                metadata.getLastModified(),
+                metadata.getLastModified()
+        );
     }
 
     @Override

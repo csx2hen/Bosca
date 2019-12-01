@@ -1,6 +1,6 @@
 package com.bosca.metadata.models;
 
-public class CreateFileInfoRequestModel {
+public class CreateFileInfoRequest {
 
     private String filename;
     private String owner;

@@ -1,9 +1,10 @@
 package com.bosca.metadata.controllers;
 
 
-import com.bosca.metadata.models.CreateFileInfoRequestModel;
-import com.bosca.metadata.models.CreateFileInfoResponseModel;
-import com.bosca.metadata.models.GetFileInfoResponseModel;
+import com.bosca.metadata.models.CreateFileInfoRequest;
+import com.bosca.metadata.models.CreateFileInfoResponse;
+import com.bosca.metadata.models.GetFileInfoResponse;
+import com.bosca.metadata.models.UpdateFileInfoRequest;
 import com.bosca.metadata.services.FileInfoService;
 import com.bosca.metadata.shared.FileInfoDto;
 import org.modelmapper.ModelMapper;
@@ -36,18 +37,18 @@ public class MetadataController {
     }
 
     @PostMapping("files")
-    public ResponseEntity<CreateFileInfoResponseModel>
-    createFileInfo(@Valid @RequestBody CreateFileInfoRequestModel fileInfo) {
+    public ResponseEntity<CreateFileInfoResponse>
+    createFileInfo(@Valid @RequestBody CreateFileInfoRequest fileInfo) {
         FileInfoDto fileInfoDto = modelMapper.map(fileInfo, FileInfoDto.class);
         FileInfoDto createdFileInfo = fileInfoService.createFileInfo(fileInfoDto);
-        CreateFileInfoResponseModel returnValue = modelMapper.map(createdFileInfo, CreateFileInfoResponseModel.class);
+        CreateFileInfoResponse returnValue = modelMapper.map(createdFileInfo, CreateFileInfoResponse.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
     }
 
     @GetMapping("files/{fileId}")
-    public ResponseEntity<GetFileInfoResponseModel> getFileInfo(@PathVariable("fileId") String fileId) {
+    public ResponseEntity<GetFileInfoResponse> getFileInfo(@PathVariable("fileId") String fileId) {
         FileInfoDto fileInfo = fileInfoService.getFileInfo(fileId);
-        GetFileInfoResponseModel returnValue = modelMapper.map(fileInfo, GetFileInfoResponseModel.class);
+        GetFileInfoResponse returnValue = modelMapper.map(fileInfo, GetFileInfoResponse.class);
         return ResponseEntity.status(HttpStatus.OK).body(returnValue);
     }
 
@@ -55,6 +56,14 @@ public class MetadataController {
     public ResponseEntity removeFileInfo(@PathVariable("fileId") String fileId) {
         fileInfoService.removeFileInfo(fileId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("files/{fileId}")
+    public ResponseEntity updateFileInfo(@PathVariable("fileId") String fileId,
+                                         @RequestBody UpdateFileInfoRequest fileInfo) {
+        FileInfoDto fileInfoDto = modelMapper.map(fileInfo, FileInfoDto.class);
+        fileInfoService.updateFileInfo(fileId, fileInfoDto);
+        return ResponseEntity.ok().build();
     }
 
 

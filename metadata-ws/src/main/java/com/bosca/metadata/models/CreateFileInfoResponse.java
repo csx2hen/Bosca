@@ -1,6 +1,6 @@
 package com.bosca.metadata.models;
 
-public class CreateFileInfoResponseModel {
+public class CreateFileInfoResponse {
 
     private String fileId;
 
