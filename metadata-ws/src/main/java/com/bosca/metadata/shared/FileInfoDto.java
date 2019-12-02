@@ -12,6 +12,8 @@ public class FileInfoDto implements Serializable {
     private long size;
     private Date createdTime;
     private Date lastModifiedTime;
+    private boolean isFolder;
+    private String parentDir;
 
 
     public String getFileId() {
@@ -60,5 +62,21 @@ public class FileInfoDto implements Serializable {
 
     public void setLastModifiedTime(Date lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
+    }
+
+    public boolean isFolder() {
+        return isFolder;
+    }
+
+    public void setFolder(boolean folder) {
+        isFolder = folder;
+    }
+
+    public String getParentDir() {
+        return parentDir;
+    }
+
+    public void setParentDir(String parentDir) {
+        this.parentDir = parentDir;
     }
 }

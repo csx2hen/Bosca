@@ -38,8 +38,9 @@ public class MetadataController {
 
     @PostMapping("files")
     public ResponseEntity<CreateFileInfoResponse>
-    createFileInfo(@Valid @RequestBody CreateFileInfoRequest fileInfo) {
+    createFileInfo(@RequestParam("userId") String userId, @Valid @RequestBody CreateFileInfoRequest fileInfo) {
         FileInfoDto fileInfoDto = modelMapper.map(fileInfo, FileInfoDto.class);
+        fileInfoDto.setOwner(userId);
         FileInfoDto createdFileInfo = fileInfoService.createFileInfo(fileInfoDto);
         CreateFileInfoResponse returnValue = modelMapper.map(createdFileInfo, CreateFileInfoResponse.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
@@ -65,7 +66,6 @@ public class MetadataController {
         fileInfoService.updateFileInfo(fileId, fileInfoDto);
         return ResponseEntity.ok().build();
     }
-
 
 
 }

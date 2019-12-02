@@ -8,6 +8,7 @@ public class UpdateFileInfoRequest {
     private long size;
     private Date createdTime;
     private Date lastModifiedTime;
+    // todo isFolder, parentDir
 
     public String getFilename() {
         return filename;

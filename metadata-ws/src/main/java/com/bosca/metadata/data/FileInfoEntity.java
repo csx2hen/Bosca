@@ -1,6 +1,8 @@
 package com.bosca.metadata.data;
 
 
+import org.springframework.integration.annotation.Default;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -33,6 +35,12 @@ public class FileInfoEntity implements Serializable {
     @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedTime;
+
+    @Column(nullable = false)
+    private boolean isFolder = false;
+
+    @Column(nullable = false)
+    private String parentDir;
 
 
     public long getId() {
@@ -89,5 +97,21 @@ public class FileInfoEntity implements Serializable {
 
     public void setLastModifiedTime(Date lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
+    }
+
+    public boolean isFolder() {
+        return isFolder;
+    }
+
+    public void setFolder(boolean folder) {
+        isFolder = folder;
+    }
+
+    public String getParentDir() {
+        return parentDir;
+    }
+
+    public void setParentDir(String parentDir) {
+        this.parentDir = parentDir;
     }
 }
