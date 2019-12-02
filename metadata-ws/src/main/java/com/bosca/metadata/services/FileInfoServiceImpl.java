@@ -64,5 +64,7 @@ public class FileInfoServiceImpl implements FileInfoService {
             fileInfoEntity.setCreatedTime(fileInfo.getCreatedTime());
         if (fileInfo.getLastModifiedTime() != null)
             fileInfoEntity.setLastModifiedTime(fileInfo.getLastModifiedTime());
+        if (fileInfo.getParentDir() != null)
+            fileInfoEntity.setParentDir(fileInfo.getParentDir());
     }
 }
