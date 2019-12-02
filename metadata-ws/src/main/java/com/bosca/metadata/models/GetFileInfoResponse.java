@@ -70,11 +70,11 @@ public class GetFileInfoResponse {
         this.parentDir = parentDir;
     }
 
-    public boolean isFolder() {
+    public boolean getIsFolder() {
         return isFolder;
     }
 
-    public void setFolder(boolean folder) {
+    public void setIsFolder(boolean folder) {
         isFolder = folder;
     }
 }

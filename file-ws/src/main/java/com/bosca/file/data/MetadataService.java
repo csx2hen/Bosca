@@ -12,15 +12,20 @@ import org.springframework.web.bind.annotation.*;
 public interface MetadataService {
 
     @PostMapping("files")
-    public CreateFileInfoResponse createFileInfo(@RequestBody CreateFileInfoRequest request);
+    public CreateFileInfoResponse createFileInfo(@RequestParam("userId") String userId,
+                                                 @RequestBody CreateFileInfoRequest request);
 
     @GetMapping("files/{fileId}")
-    public GetFileInfoResponse getFileInfo(@PathVariable("fileId") String fileId);
+    public GetFileInfoResponse getFileInfo(@RequestParam("userId") String userId,
+                                           @PathVariable("fileId") String fileId);
 
     @DeleteMapping("files/{fileId}")
-    public void removeFileInfo(@PathVariable("fileId") String fileId);
+    public void removeFileInfo(@RequestParam("userId") String userId,
+                               @PathVariable("fileId") String fileId);
 
     @PutMapping("files/{fileId}")
-    public void updateFileInfo(@PathVariable("fileId") String fileId, @RequestBody UpdateFileInfoRequest request);
+    public void updateFileInfo(@RequestParam("userId") String userId,
+                               @PathVariable("fileId") String fileId,
+                               @RequestBody UpdateFileInfoRequest request);
 
 }
