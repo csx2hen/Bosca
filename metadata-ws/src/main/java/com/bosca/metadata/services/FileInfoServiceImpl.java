@@ -8,7 +8,9 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -66,5 +68,15 @@ public class FileInfoServiceImpl implements FileInfoService {
             fileInfoEntity.setLastModifiedTime(fileInfo.getLastModifiedTime());
         if (fileInfo.getParentDir() != null)
             fileInfoEntity.setParentDir(fileInfo.getParentDir());
+    }
+
+
+    @Override
+    public List<FileInfoDto> listFolder(String userId, String fileId) {
+        List<FileInfoEntity> fileInfoEntities = fileInfoRepository.findByOwnerAndParentDir(userId, fileId);
+        return fileInfoEntities
+                .stream()
+                .map(fileInfoEntity -> modelMapper.map(fileInfoEntity, FileInfoDto.class))
+                .collect(Collectors.toList());
     }
 }
