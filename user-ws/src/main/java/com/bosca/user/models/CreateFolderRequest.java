@@ -2,7 +2,7 @@ package com.bosca.user.models;
 
 public class CreateFolderRequest {
 
-    private final String filename = "root";
+    private final String filename = "/";
     private final String parentDir ="";
     private final boolean isFolder = true;
 
