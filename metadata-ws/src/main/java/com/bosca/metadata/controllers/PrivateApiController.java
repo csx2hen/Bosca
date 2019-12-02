@@ -19,7 +19,7 @@ import javax.validation.Valid;
 
 
 @RestController
-public class MetadataController {
+public class PrivateApiController {
 
     private FileInfoService fileInfoService;
     private Environment environment;
@@ -32,7 +32,7 @@ public class MetadataController {
 
 
     @Autowired
-    public MetadataController(FileInfoService fileInfoService, Environment environment) {
+    public PrivateApiController(FileInfoService fileInfoService, Environment environment) {
         this.fileInfoService = fileInfoService;
         this.environment = environment;
     }
