@@ -35,6 +35,7 @@ public class FileController {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
     }
 
+
     @Autowired
     public FileController(MetadataService metadataService, FileService fileService, Environment environment) {
         this.metadataService = metadataService;
@@ -42,12 +43,17 @@ public class FileController {
         this.environment = environment;
     }
 
+
     @PostMapping
     public ResponseEntity<UploadResponse> uploadFile(@RequestParam("file") MultipartFile file,
-                                                     @RequestParam("userId") String userId) {
-        CreateFileInfoResponse response =
-                metadataService.createFileInfo(new CreateFileInfoRequest(file.getOriginalFilename(), userId));
+                                                     @RequestParam("userId") String userId,
+                                                     @RequestParam("parentDir") String parentDir) {
+        // first create file info on metadata service and retrieve fileId
+        CreateFileInfoResponse response = metadataService.createFileInfo(userId,
+                new CreateFileInfoRequest(file.getOriginalFilename(), parentDir));
         String fileId = response.getFileId();
+        // upload file to cloud using fileService and retrieve metadata on cloud
+        // (including: size, createdTime, lastModifiedTime)
         MetadataDto metadata = null;
         try {
             metadata = fileService.uploadFile(fileId, file.getInputStream());
@@ -55,15 +61,22 @@ public class FileController {
             e.printStackTrace();
         }
         assert metadata != null;
-        metadataService.updateFileInfo(fileId, modelMapper.map(metadata, UpdateFileInfoRequest.class));
+        // upload file info on metadata service using metadata retrieved from cloud
+        metadataService.updateFileInfo(userId, fileId, modelMapper.map(metadata, UpdateFileInfoRequest.class));
+        // compose return value
         UploadResponse returnValue = new UploadResponse(fileId);
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
     }
 
+
     @GetMapping("{fileId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileId, HttpServletRequest request) {
-        GetFileInfoResponse response = metadataService.getFileInfo(fileId);
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileId,
+                                                 @RequestParam("userId") String userId,
+                                                 HttpServletRequest request) {
+        // retrieve file info (mainly filename) from metadata service
+        GetFileInfoResponse response = metadataService.getFileInfo(userId, fileId);
         String filename = response.getFilename();
+        // compose return value
         Resource resource = new InputStreamResource(fileService.downloadFile(fileId));
         String contentType = request.getServletContext().getMimeType(filename);
         if(contentType == null) {
@@ -75,9 +88,11 @@ public class FileController {
                 .body(resource);
     }
 
+
     @DeleteMapping("{fileId}")
-    public ResponseEntity removeFile(@PathVariable String fileId) {
-        metadataService.removeFileInfo(fileId);
+    public ResponseEntity removeFile(@RequestParam("userId") String userId,
+                                     @PathVariable String fileId) {
+        metadataService.removeFileInfo(userId, fileId);
         fileService.removeFile(fileId);
         return ResponseEntity.noContent().build();
     }

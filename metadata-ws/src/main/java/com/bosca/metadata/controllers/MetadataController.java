@@ -30,11 +30,13 @@ public class MetadataController {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
     }
 
+
     @Autowired
     public MetadataController(FileInfoService fileInfoService, Environment environment) {
         this.fileInfoService = fileInfoService;
         this.environment = environment;
     }
+
 
     @PostMapping("files")
     public ResponseEntity<CreateFileInfoResponse>
@@ -46,26 +48,31 @@ public class MetadataController {
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
     }
 
+
     @GetMapping("files/{fileId}")
-    public ResponseEntity<GetFileInfoResponse> getFileInfo(@PathVariable("fileId") String fileId) {
+    public ResponseEntity<GetFileInfoResponse> getFileInfo(@RequestParam("userId") String userId,
+                                                           @PathVariable("fileId") String fileId) {
         FileInfoDto fileInfo = fileInfoService.getFileInfo(fileId);
         GetFileInfoResponse returnValue = modelMapper.map(fileInfo, GetFileInfoResponse.class);
         return ResponseEntity.status(HttpStatus.OK).body(returnValue);
     }
 
+
     @DeleteMapping("files/{fileId}")
-    public ResponseEntity removeFileInfo(@PathVariable("fileId") String fileId) {
+    public ResponseEntity removeFileInfo(@RequestParam("userId") String userId,
+                                         @PathVariable("fileId") String fileId) {
         fileInfoService.removeFileInfo(fileId);
         return ResponseEntity.noContent().build();
     }
 
+
     @PutMapping("files/{fileId}")
-    public ResponseEntity updateFileInfo(@PathVariable("fileId") String fileId,
+    public ResponseEntity updateFileInfo(@RequestParam("userId") String userId,
+                                         @PathVariable("fileId") String fileId,
                                          @RequestBody UpdateFileInfoRequest fileInfo) {
         FileInfoDto fileInfoDto = modelMapper.map(fileInfo, FileInfoDto.class);
         fileInfoService.updateFileInfo(fileId, fileInfoDto);
         return ResponseEntity.ok().build();
     }
-
 
 }

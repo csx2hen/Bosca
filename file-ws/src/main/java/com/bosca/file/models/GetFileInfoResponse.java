@@ -2,17 +2,7 @@ package com.bosca.file.models;
 
 public class GetFileInfoResponse {
 
-    private String fileId;
     private String filename;
-    private String owner;
-
-    public String getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
-    }
 
     public String getFilename() {
         return filename;
@@ -22,11 +12,4 @@ public class GetFileInfoResponse {
         this.filename = filename;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 }
