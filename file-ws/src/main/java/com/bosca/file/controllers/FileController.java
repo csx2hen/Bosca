@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/files")
 public class FileController {
 
     private Environment environment;
@@ -44,9 +43,9 @@ public class FileController {
     }
 
 
-    @PostMapping
+    @PostMapping("users/{userId}/files")
     public ResponseEntity<UploadResponse> uploadFile(@RequestParam("file") MultipartFile file,
-                                                     @RequestParam("userId") String userId,
+                                                     @PathVariable("userId") String userId,
                                                      @RequestParam("parentDir") String parentDir) {
         // first create file info on metadata service and retrieve fileId
         CreateFileInfoResponse response = metadataService.createFileInfo(userId,
@@ -69,9 +68,9 @@ public class FileController {
     }
 
 
-    @GetMapping("{fileId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileId,
-                                                 @RequestParam("userId") String userId,
+    @GetMapping("users/{userId}/files")
+    public ResponseEntity<Resource> downloadFile(@PathVariable("userId") String userId,
+                                                 @RequestParam("fileId") String fileId,
                                                  HttpServletRequest request) {
         // retrieve file info (mainly filename) from metadata service
         GetFileInfoResponse response = metadataService.getFileInfo(userId, fileId);
@@ -89,9 +88,9 @@ public class FileController {
     }
 
 
-    @DeleteMapping("{fileId}")
-    public ResponseEntity removeFile(@RequestParam("userId") String userId,
-                                     @PathVariable String fileId) {
+    @DeleteMapping("users/{userId}/files")
+    public ResponseEntity removeFile(@RequestParam("fileId") String fileId,
+                                     @PathVariable("userId") String userId) {
         metadataService.removeFileInfo(userId, fileId);
         fileService.removeFile(fileId);
         return ResponseEntity.noContent().build();
