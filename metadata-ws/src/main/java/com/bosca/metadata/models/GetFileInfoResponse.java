@@ -10,6 +10,8 @@ public class GetFileInfoResponse {
     private long size;
     private Date createdTime;
     private Date lastModifiedTime;
+    private String parentDir;
+    private boolean isFolder;
 
 
     public String getFileId() {
@@ -58,5 +60,21 @@ public class GetFileInfoResponse {
 
     public void setLastModifiedTime(Date lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
+    }
+
+    public String getParentDir() {
+        return parentDir;
+    }
+
+    public void setParentDir(String parentDir) {
+        this.parentDir = parentDir;
+    }
+
+    public boolean isFolder() {
+        return isFolder;
+    }
+
+    public void setFolder(boolean folder) {
+        isFolder = folder;
     }
 }

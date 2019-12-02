@@ -1,8 +1,10 @@
 package com.bosca.user.controllers;
 
-import com.bosca.user.models.CreateUserRequestModel;
-import com.bosca.user.models.CreateUserResponseModel;
-import com.bosca.user.models.UserResponseModel;
+import com.bosca.user.data.MetadataService;
+import com.bosca.user.models.CreateFolderResponse;
+import com.bosca.user.models.CreateUserRequest;
+import com.bosca.user.models.CreateUserResponse;
+import com.bosca.user.models.UserResponse;
 import com.bosca.user.services.UserService;
 import com.bosca.user.shared.UserDto;
 import org.modelmapper.ModelMapper;
@@ -21,6 +23,12 @@ public class UserController {
 
     private UserService userService;
     private Environment environment;
+    private ModelMapper modelMapper;
+
+    {
+        modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+    }
 
     @Autowired
     public UserController(UserService userService, Environment environment) {
@@ -37,26 +45,20 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<CreateUserResponseModel> createUser(@Valid @RequestBody CreateUserRequestModel userDetails) {
-
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
+    public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest userDetails) {
+        // register user in user service
         UserDto userDto = modelMapper.map(userDetails, UserDto.class);
         UserDto createdUser = userService.createUser(userDto);
-
-        CreateUserResponseModel returnValue = modelMapper.map(createdUser, CreateUserResponseModel.class);
-
+        // compose return value containing rootDir fileId
+        CreateUserResponse returnValue = modelMapper.map(createdUser, CreateUserResponse.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
     }
 
 
     @GetMapping(value="/{userId}")
-    public ResponseEntity<UserResponseModel> getUser(@PathVariable("userId") String userId) {
-
+    public ResponseEntity<UserResponse> getUser(@PathVariable("userId") String userId) {
         UserDto userDto = userService.getUserDetailsByUserId(userId);
-        UserResponseModel returnValue = new ModelMapper().map(userDto, UserResponseModel.class);
-
+        UserResponse returnValue = modelMapper.map(userDto, UserResponse.class);
         return ResponseEntity.status(HttpStatus.OK).body(returnValue);
     }
 }

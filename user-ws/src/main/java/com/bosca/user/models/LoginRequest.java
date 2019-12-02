@@ -1,6 +1,6 @@
 package com.bosca.user.models;
 
-public class LoginRequestModel {
+public class LoginRequest {
     private String email;
     private String password;
 

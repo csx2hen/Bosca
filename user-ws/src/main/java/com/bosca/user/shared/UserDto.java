@@ -9,6 +9,7 @@ public class UserDto implements Serializable {
     private String username;
     private String userId;
     private String encryptedPassword;
+    private String rootDir;
 
     public String getEmail() {
         return email;
@@ -48,5 +49,13 @@ public class UserDto implements Serializable {
 
     public void setEncryptedPassword(String encryptedPassword) {
         this.encryptedPassword = encryptedPassword;
+    }
+
+    public String getRootDir() {
+        return rootDir;
+    }
+
+    public void setRootDir(String rootDir) {
+        this.rootDir = rootDir;
     }
 }

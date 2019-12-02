@@ -3,7 +3,8 @@ package com.bosca.metadata.models;
 public class CreateFileInfoRequest {
 
     private String filename;
-    private String owner;
+    private String parentDir;
+    private boolean isFolder;
 
 
     public String getFilename() {
@@ -14,11 +15,19 @@ public class CreateFileInfoRequest {
         this.filename = filename;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getParentDir() {
+        return parentDir;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setParentDir(String parentDir) {
+        this.parentDir = parentDir;
+    }
+
+    public boolean isFolder() {
+        return isFolder;
+    }
+
+    public void setFolder(boolean folder) {
+        isFolder = folder;
     }
 }

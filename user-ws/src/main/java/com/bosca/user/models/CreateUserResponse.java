@@ -1,10 +1,11 @@
 package com.bosca.user.models;
 
-public class CreateUserResponseModel {
+public class CreateUserResponse {
 
     private String username;
     private String email;
     private String userId;
+    private String rootDir;
 
     public String getUsername() {
         return username;
@@ -28,5 +29,13 @@ public class CreateUserResponseModel {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getRootDir() {
+        return rootDir;
+    }
+
+    public void setRootDir(String rootDir) {
+        this.rootDir = rootDir;
     }
 }
