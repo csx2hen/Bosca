@@ -1,5 +1,6 @@
 package com.bosca.gateway.security;
 
+import com.oracle.tools.packager.Log;
 import io.jsonwebtoken.Jwts;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,6 +41,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         chain.doFilter(request, response);
     }
 
+
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(environment.getProperty("authorization.token.header.name"));
 
@@ -58,6 +60,8 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         if (userId == null) {
             return null;
         }
+
+//        System.out.println("userId: " + userId);
 
         return new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
     }
