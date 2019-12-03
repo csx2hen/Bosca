@@ -19,7 +19,7 @@ public class CreateFileInfoRequest {
         this.filename = filename;
     }
 
-    public boolean isFolder() {
+    public boolean getIsFolder() {
         return isFolder;
     }
 

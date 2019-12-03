@@ -14,7 +14,7 @@ public class CreateFolderRequest {
         return parentDir;
     }
 
-    public boolean isFolder() {
+    public boolean getIsFolder() {
         return isFolder;
     }
 }
