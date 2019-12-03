@@ -2,7 +2,7 @@ package com.bosca.metadata.models;
 
 import java.util.Date;
 
-public class GetFileInfoResponse {
+public class FileInfoResponse {
 
     private String fileId;
     private String filename;

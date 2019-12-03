@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface FileInfoRepository extends CrudRepository<FileInfoEntity, Long> {
     FileInfoEntity findByFileId(String fileId);
-    List<FileInfoEntity> findByOwnerAndParentDir(String owner, String parentDir);
+    List<FileInfoEntity> findByParentDir(String parentDir);
 
 }

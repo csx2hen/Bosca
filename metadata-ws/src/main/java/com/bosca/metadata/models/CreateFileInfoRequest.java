@@ -2,10 +2,19 @@ package com.bosca.metadata.models;
 
 public class CreateFileInfoRequest {
 
+    private String owner;
     private String filename;
     private String parentDir;
     private boolean isFolder;
 
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
     public String getFilename() {
         return filename;
