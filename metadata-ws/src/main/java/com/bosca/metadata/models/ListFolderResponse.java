@@ -4,18 +4,18 @@ import java.util.List;
 
 public class ListFolderResponse {
 
-    private List<GetFileInfoResponse> files;
+    private List<FileInfoResponse> files;
 
 
-    public ListFolderResponse(List<GetFileInfoResponse> files) {
+    public ListFolderResponse(List<FileInfoResponse> files) {
         this.files = files;
     }
 
-    public List<GetFileInfoResponse> getFiles() {
+    public List<FileInfoResponse> getFiles() {
         return files;
     }
 
-    public void setFiles(List<GetFileInfoResponse> files) {
+    public void setFiles(List<FileInfoResponse> files) {
         this.files = files;
     }
 }

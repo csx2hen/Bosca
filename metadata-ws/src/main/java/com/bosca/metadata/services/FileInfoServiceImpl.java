@@ -2,6 +2,7 @@ package com.bosca.metadata.services;
 
 import com.bosca.metadata.data.FileInfoEntity;
 import com.bosca.metadata.data.FileInfoRepository;
+import com.bosca.metadata.data.FileService;
 import com.bosca.metadata.shared.FileInfoDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class FileInfoServiceImpl implements FileInfoService {
 
+    private FileService fileService;
     private FileInfoRepository fileInfoRepository;
     private ModelMapper modelMapper;
 
@@ -25,9 +27,11 @@ public class FileInfoServiceImpl implements FileInfoService {
     }
 
     @Autowired
-    public FileInfoServiceImpl(FileInfoRepository fileInfoRepository) {
+    public FileInfoServiceImpl(FileService fileService, FileInfoRepository fileInfoRepository) {
+        this.fileService = fileService;
         this.fileInfoRepository = fileInfoRepository;
     }
+
 
     @Override
     public FileInfoDto createFileInfo(FileInfoDto fileInfo) {
@@ -37,6 +41,7 @@ public class FileInfoServiceImpl implements FileInfoService {
         return modelMapper.map(fileInfoEntity, FileInfoDto.class);
     }
 
+
     @Override
     public FileInfoDto getFileInfo(String fileId) {
         FileInfoEntity fileInfoEntity = fileInfoRepository.findByFileId(fileId);
@@ -44,11 +49,23 @@ public class FileInfoServiceImpl implements FileInfoService {
         return modelMapper.map(fileInfoEntity, FileInfoDto.class);
     }
 
+
     @Override
     public void removeFileInfo(String fileId) {
         FileInfoEntity fileInfoEntity = fileInfoRepository.findByFileId(fileId);
+        // check if the fileInfo is a descriptor of folder
+        // if true, remove its contents recursively
+        // if false, remove file data through file service first
+        if (fileInfoEntity.getIsFolder()) {
+            List<FileInfoEntity> contents = fileInfoRepository.findByParentDir(fileId);
+            contents.forEach(content -> removeFileInfo(content.getFileId()));
+        } else {
+            fileService.removeFile(fileId);
+        }
+        // remove itself from file table
         fileInfoRepository.delete(fileInfoEntity);
     }
+
 
     @Override
     public void updateFileInfo(String fileId, FileInfoDto fileInfo) {
@@ -56,6 +73,7 @@ public class FileInfoServiceImpl implements FileInfoService {
         updateFileInfoHelper(fileInfoEntity, fileInfo);
         fileInfoRepository.save(fileInfoEntity);
     }
+
 
     private void updateFileInfoHelper(FileInfoEntity fileInfoEntity, FileInfoDto fileInfo) {
         if (fileInfo.getFilename() != null)
@@ -72,8 +90,8 @@ public class FileInfoServiceImpl implements FileInfoService {
 
 
     @Override
-    public List<FileInfoDto> listFolder(String userId, String fileId) {
-        List<FileInfoEntity> fileInfoEntities = fileInfoRepository.findByOwnerAndParentDir(userId, fileId);
+    public List<FileInfoDto> listFolder(String fileId) {
+        List<FileInfoEntity> fileInfoEntities = fileInfoRepository.findByParentDir(fileId);
         return fileInfoEntities
                 .stream()
                 .map(fileInfoEntity -> modelMapper.map(fileInfoEntity, FileInfoDto.class))
