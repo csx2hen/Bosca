@@ -43,7 +43,7 @@ public class PublicApiController {
                              @RequestBody CreateFileInfoRequest request) {
         FileInfoDto fileInfoDto = modelMapper.map(request, FileInfoDto.class);
         fileInfoDto.setOwner(userId);
-        fileInfoDto.setFolder(true);
+        fileInfoDto.setIsFolder(true);
         FileInfoDto createdFileInfo = fileInfoService.createFileInfo(fileInfoDto);
         CreateFileInfoResponse returnValue = modelMapper.map(createdFileInfo, CreateFileInfoResponse.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
