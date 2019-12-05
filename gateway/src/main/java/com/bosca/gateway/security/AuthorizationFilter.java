@@ -1,6 +1,5 @@
 package com.bosca.gateway.security;
 
-import com.oracle.tools.packager.Log;
 import io.jsonwebtoken.Jwts;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
