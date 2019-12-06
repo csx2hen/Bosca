@@ -30,12 +30,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
         http.headers().frameOptions().disable();
+        http.addFilter(new AuthorizationFilter(authenticationManager(), environment));
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, environment.getProperty("api.login.url.path")).permitAll()
                 .antMatchers(HttpMethod.POST, environment.getProperty("api.registration.url.path")).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilter(new AuthorizationFilter(authenticationManager(), environment));
+                .anyRequest().authenticated();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
