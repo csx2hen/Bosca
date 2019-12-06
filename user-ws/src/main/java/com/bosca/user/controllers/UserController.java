@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -56,7 +57,8 @@ public class UserController {
 
 
     @GetMapping(value="/{userId}")
-    public ResponseEntity<UserResponse> getUser(@PathVariable("userId") String userId) {
+    public ResponseEntity<UserResponse> getUser(@PathVariable("userId") String userId, Authentication authentication) {
+//        System.out.println("userId: " + authentication.getPrincipal());
         UserDto userDto = userService.getUserDetailsByUserId(userId);
         UserResponse returnValue = modelMapper.map(userDto, UserResponse.class);
         return ResponseEntity.status(HttpStatus.OK).body(returnValue);
