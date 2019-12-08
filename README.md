@@ -30,3 +30,5 @@ The easiest way to run the project is to open it in IntelliJ IDEA. The script to
 3. Run Config Server in IDEA, and wait the process to finish.
 4. Run Service Discovery and API Gateway in IDEA.
 5. Run User-WS, File-WS and Metadata-WS in IDEA.
+
+*Now the project is connected my AWS S3 and AWS RDS. For test, you had better connect it to your own AWS S3 and AWS RDS or local Mysql Database. To do this, you need to create them on AWS and modify application.yml in BoscaConfiguration repository.*
