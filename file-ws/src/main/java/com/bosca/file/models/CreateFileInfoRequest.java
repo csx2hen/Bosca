@@ -2,13 +2,23 @@ package com.bosca.file.models;
 
 public class CreateFileInfoRequest {
 
+    private String owner;
     private String filename;
     private final boolean isFolder = false;
     private String parentDir;
 
-    public CreateFileInfoRequest(String filename, String parentDir) {
+    public CreateFileInfoRequest(String owner, String filename, String parentDir) {
+        this.owner = owner;
         this.filename = filename;
         this.parentDir = parentDir;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public String getFilename() {
@@ -19,7 +29,7 @@ public class CreateFileInfoRequest {
         this.filename = filename;
     }
 
-    public boolean isFolder() {
+    public boolean getIsFolder() {
         return isFolder;
     }
 

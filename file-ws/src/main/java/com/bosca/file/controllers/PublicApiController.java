@@ -21,8 +21,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.UUID;
 
+
+/**
+ * This controller is mainly for public API of file service
+ * (including uploading and downloading file).
+ */
 @RestController
-public class FileController {
+public class PublicApiController {
 
     private Environment environment;
     private FileService fileService;
@@ -36,20 +41,27 @@ public class FileController {
 
 
     @Autowired
-    public FileController(MetadataService metadataService, FileService fileService, Environment environment) {
+    public PublicApiController(MetadataService metadataService, FileService fileService, Environment environment) {
         this.metadataService = metadataService;
         this.fileService = fileService;
         this.environment = environment;
     }
 
 
+    /**
+     * Upload file data to cloud.
+     * @param file file data
+     * @param userId owner's userId
+     * @param parentDir
+     * @return fileId of uploaded file
+     */
     @PostMapping("users/{userId}/files")
     public ResponseEntity<UploadResponse> uploadFile(@RequestParam("file") MultipartFile file,
                                                      @PathVariable("userId") String userId,
                                                      @RequestParam("parentDir") String parentDir) {
         // first create file info on metadata service and retrieve fileId
-        CreateFileInfoResponse response = metadataService.createFileInfo(userId,
-                new CreateFileInfoRequest(file.getOriginalFilename(), parentDir));
+        CreateFileInfoResponse response = metadataService
+                .createFileInfo(new CreateFileInfoRequest(userId, file.getOriginalFilename(), parentDir));
         String fileId = response.getFileId();
         // upload file to cloud using fileService and retrieve metadata on cloud
         // (including: size, createdTime, lastModifiedTime)
@@ -61,19 +73,26 @@ public class FileController {
         }
         assert metadata != null;
         // upload file info on metadata service using metadata retrieved from cloud
-        metadataService.updateFileInfo(userId, fileId, modelMapper.map(metadata, UpdateFileInfoRequest.class));
+        metadataService.updateFileInfo(fileId, modelMapper.map(metadata, UpdateFileInfoRequest.class));
         // compose return value
         UploadResponse returnValue = new UploadResponse(fileId);
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
     }
 
 
+    /**
+     * Download file data from cloud.
+     * @param userId
+     * @param fileId
+     * @param request
+     * @return file data as resource
+     */
     @GetMapping("users/{userId}/files")
     public ResponseEntity<Resource> downloadFile(@PathVariable("userId") String userId,
                                                  @RequestParam("fileId") String fileId,
                                                  HttpServletRequest request) {
         // retrieve file info (mainly filename) from metadata service
-        GetFileInfoResponse response = metadataService.getFileInfo(userId, fileId);
+        GetFileInfoResponse response = metadataService.getFileInfo(fileId);
         String filename = response.getFilename();
         // compose return value
         Resource resource = new InputStreamResource(fileService.downloadFile(fileId));
@@ -85,15 +104,6 @@ public class FileController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .body(resource);
-    }
-
-
-    @DeleteMapping("users/{userId}/files")
-    public ResponseEntity removeFile(@RequestParam("fileId") String fileId,
-                                     @PathVariable("userId") String userId) {
-        metadataService.removeFileInfo(userId, fileId);
-        fileService.removeFile(fileId);
-        return ResponseEntity.noContent().build();
     }
 
 }

@@ -10,5 +10,5 @@ public interface FileInfoService {
     FileInfoDto getFileInfo(String fileId);
     void removeFileInfo(String fileId);
     void updateFileInfo(String fileId, FileInfoDto fileInfo);
-    List<FileInfoDto> listFolder(String userId, String fileId);
+    List<FileInfoDto> listFolder(String fileId);
 }

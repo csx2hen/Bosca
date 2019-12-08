@@ -9,7 +9,7 @@ public class UpdateFileInfoRequest {
     private Date createdTime;
     private Date lastModifiedTime;
     private String parentDir;
-    private boolean isFolder;
+
 
     public String getFilename() {
         return filename;
@@ -51,11 +51,4 @@ public class UpdateFileInfoRequest {
         this.parentDir = parentDir;
     }
 
-    public boolean isFolder() {
-        return isFolder;
-    }
-
-    public void setFolder(boolean folder) {
-        isFolder = folder;
-    }
 }
