@@ -3,8 +3,6 @@
 Bosca is a personal file management system implemented in micro-service architecture.
 
 ## To run the project
-The easiest way to run the project is to open it in IntelliJ IDEA. The script to run each service has been configed within IDEA project.
-
 ### Following steps should be taken to run the project smoothly:
 
 1. Run docker of Zipkin locally, and map the ports to let local services user it:
@@ -31,7 +29,5 @@ The easiest way to run the project is to open it in IntelliJ IDEA. The script to
 4. Run Service Discovery and API Gateway in IDEA.
 5. Run User-WS, File-WS and Metadata-WS in IDEA.
 
-
-
-*Now the project is connected my AWS S3 and AWS RDS. For test, you can just use existing configuration. In other scenario, you had better connect it to your own AWS S3 and AWS RDS or local Mysql Database. To do this, you need to create them on AWS and modify application.yml in BoscaConfiguration repository.*
+*A GitHub config repository and S3 account are needed to run the project.*
 
